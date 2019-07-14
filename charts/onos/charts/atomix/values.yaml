@@ -1,0 +1,57 @@
+nameOverride: ""
+
+image:
+  repository: atomix/atomix
+  tag: 3.0.7
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+
+replicas: 3
+logLevel: INFO
+heap: 2G
+config: |
+  cluster {
+    node: ${atomix.node}
+
+    discovery {
+      type: bootstrap
+      nodes: ${atomix.nodes}
+    }
+  }
+  managementGroup {
+    type: raft
+    name: system
+    partitionSize: 3
+    partitions: 1
+    members: ${atomix.members}
+  }
+  partitionGroups.raft {
+    type: raft
+    name: raft
+    partitionSize: 3
+    partitions: ${atomix.replicas}
+    members: ${atomix.members}
+  }
+
+ingress:
+  enabled: false
+
+podAntiAffinity:
+  enabled: false
+
+podDisruptionBudget:
+  enabled: true
+  maxUnavailable: 1
+  # minAvailable: 1
+
+persistence:
+  enable: false
+  accessModes:
+    - ReadWriteOnce
+  size: 10Gi
+  annotations: {}
+
+resources:
+  requests:
+    cpu: 0.5
+    memory: 512Mi

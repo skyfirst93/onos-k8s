@@ -1,0 +1,15 @@
+nameOverride: ""
+
+image:
+  repository: onos/mininet
+  tag: 0.0.1 
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+
+mininet:
+  topo: "linear,4"
+  switch: openvswitch
+
+controller:
+  service: onos-onos
+  replicas: 3
